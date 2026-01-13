@@ -1,0 +1,34 @@
+{
+    "name": "simple-eshop",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "npx nodemon"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/khaledhabib18/simple-eshop.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/khaledhabib18/simple-eshop/issues"
+    },
+    "homepage": "https://github.com/khaledhabib18/simple-eshop#readme",
+    "devDependencies": {
+        "@types/express": "^5.0.6",
+        "@types/node": "^25.0.8",
+        "nodemon": "^3.1.11",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.9.3"
+    },
+    "dependencies": {
+        "@prisma/client": "^7.2.0",
+        "dotenv": "^17.2.3",
+        "express": "^5.2.1",
+        "prisma": "^6.19.2"
+    }
+}
