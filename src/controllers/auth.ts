@@ -1,18 +1,19 @@
 import { Request, Response } from "express";
 import { hashSync, compareSync } from "bcrypt";
-import { findUserByEmail, createUser } from "../repositories/userModel";
+import { findUserByEmail, createUser } from "../repositories/userRepo";
 import * as jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../secrets";
+import { BadRequestsExeption } from "../exceptions/bad-requests";
+import { ErrorCode } from "../exceptions/root";
 
 export const signup = async (req: Request, res: Response) => {
     let { email, password, name } = req.body;
     let user = await findUserByEmail(email);
     if (user) {
-        res.status(409).send({
-            error: "Conflict",
-            message: "A user with this email already exists.",
-        });
-        throw Error("User already exists");
+        throw new BadRequestsExeption(
+            "user already exists",
+            ErrorCode.USER_ALREADY_EXISTS
+        );
     } else {
         password = hashSync(password, 10);
         user = await createUser({
@@ -28,18 +29,16 @@ export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     let user = await findUserByEmail(email);
     if (!user) {
-        res.status(401).send({
-            error: "unauthorized",
-            message: "Invalid email or password",
-        });
-        throw Error("Invalid email or password");
+        throw new BadRequestsExeption(
+            "User does not exits",
+            ErrorCode.USER_NOT_FOUND
+        );
     } else {
         if (!compareSync(password, user.password)) {
-            res.status(401).send({
-                error: "unauthorized",
-                message: "Invalid email or password",
-            });
-            throw Error("Invalid email or password");
+            throw new BadRequestsExeption(
+                "Password is not correct",
+                ErrorCode.INCORRECT_PASSWORD
+            );
         } else {
             const token = jwt.sign(
                 {
