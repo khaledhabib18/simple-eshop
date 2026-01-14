@@ -5,23 +5,34 @@ import * as jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../secrets";
 import { BadRequestsExeption } from "../exceptions/bad-requests";
 import { ErrorCode } from "../exceptions/root";
+import { UnprocessableEntity } from "../exceptions/validation";
+import { SignupSchema } from "../schemas/users";
 
 export const signup = async (req: Request, res: Response) => {
-    let { email, password, name } = req.body;
-    let user = await findUserByEmail(email);
-    if (user) {
-        throw new BadRequestsExeption(
-            "user already exists",
-            ErrorCode.USER_ALREADY_EXISTS
+    try {
+        SignupSchema.parse(req.body);
+        let { email, password, name } = req.body;
+        let user = await findUserByEmail(email);
+        if (user) {
+            throw new BadRequestsExeption(
+                "user already exists",
+                ErrorCode.USER_ALREADY_EXISTS
+            );
+        } else {
+            password = hashSync(password, 10);
+            user = await createUser({
+                name,
+                password,
+                email,
+            });
+            res.status(200).send(user);
+        }
+    } catch (err: any) {
+        throw new UnprocessableEntity(
+            err?.issues,
+            "Unprocessable Entity",
+            ErrorCode.UNPROCESSABLE_ENTITY
         );
-    } else {
-        password = hashSync(password, 10);
-        user = await createUser({
-            name,
-            password,
-            email,
-        });
-        res.status(200).send(user);
     }
 };
 
