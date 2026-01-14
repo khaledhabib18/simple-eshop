@@ -9,33 +9,24 @@ import { UnprocessableEntity } from "../exceptions/validation";
 import { SignupSchema } from "../schemas/users";
 
 export const signup = async (req: Request, res: Response) => {
-    try {
-        SignupSchema.parse(req.body);
-        let { email, password, name } = req.body;
-        let user = await findUserByEmail(email);
-        if (user) {
-            throw new BadRequestsExeption(
-                "user already exists",
-                ErrorCode.USER_ALREADY_EXISTS
-            );
-        } else {
-            password = hashSync(password, 10);
-            user = await createUser({
-                name,
-                password,
-                email,
-            });
-            res.status(200).send(user);
-        }
-    } catch (err: any) {
-        throw new UnprocessableEntity(
-            err?.issues,
-            "Unprocessable Entity",
-            ErrorCode.UNPROCESSABLE_ENTITY
+    SignupSchema.parse(req.body);
+    let { email, password, name } = req.body;
+    let user = await findUserByEmail(email);
+    if (user) {
+        throw new BadRequestsExeption(
+            "user already exists",
+            ErrorCode.USER_ALREADY_EXISTS
         );
+    } else {
+        password = hashSync(password, 10);
+        user = await createUser({
+            name,
+            password,
+            email,
+        });
+        res.status(200).send(user);
     }
 };
-
 export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     let user = await findUserByEmail(email);
