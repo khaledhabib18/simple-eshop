@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { hashSync, compareSync } from "bcrypt";
-import { findUserByEmail, createUser } from "../models/userModel";
+import { findUserByEmail, createUser } from "../repositories/userModel";
 import * as jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../secrets";
 
