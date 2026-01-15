@@ -7,6 +7,7 @@ import { BadRequestsExeption } from "../exceptions/bad-requests";
 import { ErrorCode } from "../exceptions/root";
 import { UnprocessableEntity } from "../exceptions/validation";
 import { SignupSchema } from "../schemas/users";
+import { NotFoundExeption } from "../exceptions/not-found";
 
 export const signup = async (req: Request, res: Response) => {
     SignupSchema.parse(req.body);
@@ -31,14 +32,14 @@ export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     let user = await findUserByEmail(email);
     if (!user) {
-        throw new BadRequestsExeption(
+        throw new NotFoundExeption(
             "User does not exits",
             ErrorCode.USER_NOT_FOUND
         );
     } else {
         if (!compareSync(password, user.password)) {
             throw new BadRequestsExeption(
-                "Password is not correct",
+                "Incorrect password",
                 ErrorCode.INCORRECT_PASSWORD
             );
         } else {
