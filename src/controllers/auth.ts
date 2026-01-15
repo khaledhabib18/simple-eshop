@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { hashSync, compareSync } from "bcrypt";
 import { findUserByEmail, createUser } from "../repositories/userRepo";
 import * as jwt from "jsonwebtoken";
@@ -52,4 +52,8 @@ export const login = async (req: Request, res: Response) => {
             res.status(200).send({ user, token });
         }
     }
+};
+
+export const me = async (req: Request, res: Response, next: NextFunction) => {
+    res.json(req.user);
 };
