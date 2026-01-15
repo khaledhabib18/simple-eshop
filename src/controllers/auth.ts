@@ -5,8 +5,7 @@ import * as jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../secrets";
 import { BadRequestsExeption } from "../exceptions/bad-requests";
 import { ErrorCode } from "../exceptions/root";
-import { UnprocessableEntity } from "../exceptions/validation";
-import { SignupSchema } from "../schemas/users";
+import { LoginSchema, SignupSchema } from "../schemas/users";
 import { NotFoundExeption } from "../exceptions/not-found";
 
 export const signup = async (req: Request, res: Response) => {
@@ -29,6 +28,7 @@ export const signup = async (req: Request, res: Response) => {
     }
 };
 export const login = async (req: Request, res: Response) => {
+    LoginSchema.parse(req.body);
     const { email, password } = req.body;
     let user = await findUserByEmail(email);
     if (!user) {
