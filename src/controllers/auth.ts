@@ -49,7 +49,7 @@ export const login = async (req: Request, res: Response) => {
                 },
                 JWT_SECRET
             );
-            res.status(200).send({ user, token });
+            res.status(200).send({ token });
         }
     }
 };

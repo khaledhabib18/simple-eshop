@@ -3,9 +3,10 @@ import { PORT } from "./secrets";
 import rootRouter from "./routes";
 import { json } from "node:stream/consumers";
 import { errorMiddleware } from "./middlewares/errors";
-
+import cors from "cors";
 const app: Express = express();
 
+app.use(cors());
 app.use(express.json());
 app.use("/api", rootRouter);
 
