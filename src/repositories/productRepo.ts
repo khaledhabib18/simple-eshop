@@ -6,15 +6,19 @@ interface ProductData {
     id?: string;
     name: string;
     description: string;
-    price: Decimal;
+    price: number;
     tags: string;
+    inStock: number;
+    images: string[];
 }
 interface UpdatingProductData {
     id: string;
     name: string;
     description: string;
-    price: Decimal;
+    price: number;
     tags: string;
+    inStock: number;
+    images: string[];
 }
 
 export const createProductRepo = async (data: ProductData) => {

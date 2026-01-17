@@ -10,6 +10,8 @@ import {
 import { authMiddleware } from "../middlewares/auth";
 import { adminMiddleware } from "../middlewares/admin";
 import { error } from "node:console";
+import { upload } from "../utils/multer";
+import { uploadBodyParser } from "../middlewares/uploadBodyParser";
 
 const productRoutes: Router = Router();
 
@@ -17,12 +19,16 @@ productRoutes.post(
     "/",
     authMiddleware,
     adminMiddleware,
+    upload.array("file", 5),
+    uploadBodyParser,
     erroHandler(addProduct)
 );
 productRoutes.put(
     "/:id",
     authMiddleware,
     adminMiddleware,
+    upload.array("file", 5),
+    uploadBodyParser,
     erroHandler(updateProduct)
 );
 productRoutes.delete(

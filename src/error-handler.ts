@@ -10,6 +10,7 @@ export const erroHandler = (method: Function) => {
         try {
             await method(req, res, next);
         } catch (error: any) {
+            console.log("🔥 ORIGINAL ERROR:", error); // <--- add this
             let exception: HttpException;
             if (error instanceof HttpException) {
                 exception = error;
@@ -21,7 +22,7 @@ export const erroHandler = (method: Function) => {
                     );
                 } else {
                     exception = new InternalException(
-                        "Something went wrong",
+                        error.message || "Something went wrong", // <--- show real message
                         error,
                         ErrorCode.INTERNAL_EXCEPTION
                     );
