@@ -19,3 +19,9 @@ export const AddressSchema = z.object({
     city:z.string(),
     userId :z.string(),
 })
+
+export const UpdateUserSchema = z.object({
+    name: z.string().optional(),
+    defaultShippingAddressId:z.string().optional(),
+    defaultBillingAddressId:z.string().optional()
+})

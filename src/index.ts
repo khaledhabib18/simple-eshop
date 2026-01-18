@@ -1,7 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import { PORT } from "./secrets";
 import rootRouter from "./routes";
-import { json } from "node:stream/consumers";
 import { errorMiddleware } from "./middlewares/errors";
 import cors from "cors";
 const app: Express = express();
