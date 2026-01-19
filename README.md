@@ -4,25 +4,25 @@ A RESTful e-commerce API built with **TypeScript**, **Express.js**, and **Prisma
 
 ## 🚀 Features
 
--   **User Authentication**: Signup and login with JWT-based authentication
--   **Role-Based Access Control**: Admin and User roles with protected routes
--   **Product Management**: CRUD operations for products (Admin only)
--   **Address Management**: Users can have multiple addresses
--   **Input Validation**: Zod schema validation for request data
--   **Error Handling**: Centralized error handling with custom exception classes
--   **Type Safety**: Full TypeScript implementation with strict type checking
+- **User Authentication**: Signup and login with JWT-based authentication
+- **Role-Based Access Control**: Admin and User roles with protected routes
+- **Product Management**: CRUD operations for products (Admin only)
+- **Address Management**: Users can have multiple addresses
+- **Input Validation**: Zod schema validation for request data
+- **Error Handling**: Centralized error handling with custom exception classes
+- **Type Safety**: Full TypeScript implementation with strict type checking
 
 ## 🛠️ Tech Stack
 
--   **Runtime**: Node.js
--   **Framework**: Express.js 5.x
--   **Language**: TypeScript 5.x
--   **ORM**: Prisma 7.x
--   **Database**: PostgreSQL
--   **Authentication**: JWT (jsonwebtoken)
--   **Password Hashing**: bcrypt
--   **Validation**: Zod
--   **Development**: nodemon, ts-node
+- **Runtime**: Node.js
+- **Framework**: Express.js 5.x
+- **Language**: TypeScript 5.x
+- **ORM**: Prisma 7.x
+- **Database**: PostgreSQL
+- **Authentication**: JWT (jsonwebtoken)
+- **Password Hashing**: bcrypt
+- **Validation**: Zod
+- **Development**: nodemon, ts-node
 
 ## 📁 Project Structure
 
@@ -71,47 +71,47 @@ simple-eshop/
 
 Before you begin, ensure you have the following installed:
 
--   **Node.js** (v18 or higher)
--   **PostgreSQL** (v12 or higher)
--   **npm** or **yarn**
+- **Node.js** (v18 or higher)
+- **PostgreSQL** (v12 or higher)
+- **npm** or **yarn**
 
 ## 🔧 Installation
 
 1. **Clone the repository**
 
-    ```bash
-    git clone https://github.com/khaledhabib18/simple-eshop.git
-    cd simple-eshop
-    ```
+   ```bash
+   git clone https://github.com/khaledhabib18/simple-eshop.git
+   cd simple-eshop
+   ```
 
 2. **Install dependencies**
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 3. **Set up environment variables**
 
-    Create a `.env` file in the root directory:
+   Create a `.env` file in the root directory:
 
-    ```env
-    DATABASE_URL="postgresql://username:password@localhost:5432/dbname"
-    PORT=3000
-    JWT_SECRET="your-secret-key-here"
-    ```
+   ```env
+   DATABASE_URL="postgresql://username:password@localhost:5432/dbname"
+   PORT=3000
+   JWT_SECRET="your-secret-key-here"
+   ```
 
 4. **Set up the database**
 
-    Make sure PostgreSQL is running, then run migrations:
+   Make sure PostgreSQL is running, then run migrations:
 
-    ```bash
-    npx prisma migrate dev
-    ```
+   ```bash
+   npx prisma migrate dev
+   ```
 
 5. **Generate Prisma Client**
-    ```bash
-    npx prisma generate
-    ```
+   ```bash
+   npx prisma generate
+   ```
 
 ## 🏃 Running the Project
 
@@ -141,13 +141,36 @@ npx tsx ./src/index.ts
 
 ### Product Routes (`/api/products`)
 
-| Method | Endpoint            | Description                         | Auth Required | Admin Only |
-| ------ | ------------------- | ----------------------------------- | ------------- | ---------- |
-| GET    | `/api/products`     | List all products (with pagination) | Yes           | Yes        |
-| GET    | `/api/products/:id` | Get product by ID                   | Yes           | Yes        |
-| POST   | `/api/products`     | Create a new product                | Yes           | Yes        |
-| PUT    | `/api/products/:id` | Update a product                    | Yes           | Yes        |
-| DELETE | `/api/products/:id` | Delete a product                    | Yes           | Yes        |
+| Method | Endpoint            | Description          | Auth Required | Admin Only |
+| ------ | ------------------- | -------------------- | ------------- | ---------- |
+| GET    | `/api/products`     | List all products    | Yes           | Yes        |
+| GET    | `/api/products/:id` | Get product by ID    | Yes           | Yes        |
+| POST   | `/api/products`     | Create a new product | Yes           | Yes        |
+| PUT    | `/api/products/:id` | Update a product     | Yes           | Yes        |
+| DELETE | `/api/products/:id` | Delete a product     | Yes           | Yes        |
+
+### Address Routes (`/api/address`)
+
+| Method | Endpoint           | Description             | Auth Required |
+| ------ | ------------------ | ----------------------- | ------------- |
+| POST   | `/api/address`     | Add a new address       | Yes           |
+| GET    | `/api/address`     | List all user addresses | Yes           |
+| DELETE | `/api/address/:id` | Delete an address       | Yes           |
+
+### Cart Routes (`/api/cart`)
+
+| Method | Endpoint        | Description               | Auth Required |
+| ------ | --------------- | ------------------------- | ------------- |
+| POST   | `/api/cart`     | Add item to cart          | Yes           |
+| GET    | `/api/cart`     | Get user cart             | Yes           |
+| PUT    | `/api/cart/:id` | Change cart item quantity | Yes           |
+| DELETE | `/api/cart/:id` | Remove item from cart     | Yes           |
+
+### User Routes (`/api/user`)
+
+| Method | Endpoint    | Description      | Auth Required |
+| ------ | ----------- | ---------------- | ------------- |
+| PUT    | `/api/user` | Update user info | Yes           |
 
 ### Request/Response Examples
 
@@ -201,44 +224,61 @@ Content-Type: application/json
 
 ### User Model
 
--   `id`: UUID (Primary Key)
--   `name`: String
--   `email`: String (Unique)
--   `password`: String (Hashed)
--   `role`: Enum (ADMIN | USER) - Default: USER
--   `createdAt`: DateTime
--   `updatedAt`: DateTime
--   `addresses`: Address[] (One-to-Many)
+- `id`: UUID (Primary Key)
+- `name`: String
+- `email`: String (Unique)
+- `password`: String (Hashed with bcrypt)
+- `role`: Enum (ADMIN | USER) - Default: USER
+- `defaultShippingAddressId`: String? (Optional)
+- `defaultBillingAddressId`: String? (Optional)
+- `createdAt`: DateTime
+- `updatedAt`: DateTime
+- `addresses`: Address[] (One-to-Many)
+- `cartItems`: CartItem[] (One-to-Many)
 
 ### Address Model
 
--   `id`: UUID (Primary Key)
--   `lineOne`: String
--   `lineTwo`: String? (Optional)
--   `city`: String
--   `country`: String
--   `pinCode`: String
--   `userId`: String (Foreign Key)
--   `createdAt`: DateTime
--   `updatedAt`: DateTime
+- `id`: UUID (Primary Key)
+- `lineOne`: String
+- `lineTwo`: String? (Optional)
+- `city`: String
+- `country`: String
+- `pinCode`: String
+- `userId`: String (Foreign Key)
+- `createdAt`: DateTime
+- `updatedAt`: DateTime
 
 ### Product Model
 
--   `id`: UUID (Primary Key)
--   `name`: String
--   `description`: String
--   `price`: Decimal
--   `tags`: String (Comma-separated)
--   `createdAt`: DateTime
--   `updatedAt`: DateTime
+- `id`: UUID (Primary Key)
+- `name`: String
+- `description`: String
+- `price`: Float
+- `inStock`: Integer
+- `images`: String[] (Array of image URLs)
+- `tags`: String (Comma-separated)
+- `createdAt`: DateTime
+- `updatedAt`: DateTime
+- `cartItems`: CartItem[] (One-to-Many)
+
+### CartItem Model
+
+- `id`: UUID (Primary Key)
+- `userId`: String (Foreign Key)
+- `user`: User (Many-to-One)
+- `productId`: String (Foreign Key)
+- `product`: Product (Many-to-One)
+- `quantity`: Integer
+- `createdAt`: DateTime
+- `updatedAt`: DateTime
 
 ## 🔐 Authentication & Authorization
 
--   **JWT Tokens**: Used for authentication
--   **Bearer Token**: Include in Authorization header: `Authorization: Bearer <token>`
--   **Role-Based Access**:
-    -   `USER`: Can access protected routes
-    -   `ADMIN`: Can access all routes including product management
+- **JWT Tokens**: Used for authentication
+- **Bearer Token**: Include in Authorization header: `Authorization: Bearer <token>`
+- **Role-Based Access**:
+  - `USER`: Can access protected routes
+  - `ADMIN`: Can access all routes including product management
 
 ## 🎯 Key Learning Points
 
@@ -246,45 +286,48 @@ This project demonstrates:
 
 1. **TypeScript Best Practices**
 
-    - Strict type checking
-    - Type-safe database queries with Prisma
-    - Custom type definitions
+   - Strict type checking
+   - Type-safe database queries with Prisma
+   - Custom type definitions
 
 2. **Prisma ORM**
 
-    - Schema definition and migrations
-    - Type-safe database access
-    - Relationships (One-to-Many)
-    - Custom Prisma client generation
+   - Schema definition and migrations
+   - Type-safe database access
+   - Relationships (One-to-Many)
+   - Custom Prisma client generation
 
 3. **Express.js Architecture**
 
-    - MVC-like structure (Controllers, Routes, Repositories)
-    - Middleware pattern
-    - Error handling middleware
+   - MVC-like structure (Controllers, Routes, Repositories)
+   - Middleware pattern
+   - Error handling middleware
 
 4. **Security**
 
-    - Password hashing with bcrypt
-    - JWT token-based authentication
-    - Role-based authorization
+   - Password hashing with bcrypt
+   - JWT token-based authentication
+   - Role-based authorization
 
 5. **Validation**
 
-    - Request validation with Zod
-    - Type-safe schema definitions
+   - Request validation with Zod
+   - Type-safe schema definitions
 
 6. **Error Handling**
-    - Custom exception classes
-    - Centralized error handling
-    - HTTP status code management
+   - Custom exception classes
+   - Centralized error handling
+   - HTTP status code management
 
 ## 🧪 Development Notes
 
--   The Prisma client is generated to a custom location (`src/generated/prisma`)
--   Uses `@prisma/adapter-pg` for PostgreSQL connection pooling
--   TypeScript configured with strict mode and modern ES features
--   Development server uses `nodemon` with `tsx` for hot reloading
+- The Prisma client is generated to a custom location (`src/generated/prisma`)
+- Uses `@prisma/adapter-pg` for PostgreSQL connection pooling
+- TypeScript configured with strict mode and modern ES features
+- Development server uses `nodemon` with `ts-node` for hot reloading
+- Static file uploads served from `/api/uploads` endpoint
+- Custom error handler wrapper for async route handlers
+- Centralized validation using Zod schemas
 
 ## 📝 Environment Variables
 
@@ -306,7 +349,7 @@ ISC
 
 **khaledhabib18**
 
--   GitHub: [@khaledhabib18](https://github.com/khaledhabib18)
+- GitHub: [@khaledhabib18](https://github.com/khaledhabib18)
 
 ---
 
