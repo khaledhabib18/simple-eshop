@@ -24,7 +24,7 @@ export const sendInvoiceMail = async (order: any) => {
         <mj-image width="64px" src="https://cdn-icons-png.flaticon.com/512/9321/9321300.png"></mj-image>
         
         <mj-text align="center" font-size="24px" font-weight="800" color="#1a202c" padding-top="20px">
-          Hi ${order.user.name}},
+          Hi ${order.user.name},
         </mj-text>
         
         <mj-text align="center" font-size="18px" font-weight="600" color="#2d3748">
