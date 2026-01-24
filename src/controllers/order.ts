@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import { prisma } from "../repositories/prisma";
 import { NotFoundExeption } from "../exceptions/not-found";
 import { ErrorCode } from "../exceptions/root";
+import { generateInvoicePDF } from "../utils/generateInvoice";
+import { sendInvoiceMail } from "../utils/sendInvoiceMail";
+import { safeDeleteFiles } from "../utils/safeDeleteFiles";
 
 export const createOrder = async (req: Request, res: Response) => {
   // 1. to create a transaction
@@ -35,7 +38,6 @@ export const createOrder = async (req: Request, res: Response) => {
         id: req.user.defaultShippingAddressId,
       },
     });
-    console.log(address);
     const order = await tx.order.create({
       data: {
         userId: req.user.id,
@@ -59,7 +61,24 @@ export const createOrder = async (req: Request, res: Response) => {
         userId: req.user.id,
       },
     });
-
+    const invoiceOrder = await tx.order.findFirstOrThrow({
+      where: {
+        id: order.id,
+      },
+      include: {
+        user: true,
+      },
+    });
+    const invoiceOrderProducts = await tx.orderProduct.findMany({
+      where: {
+        orderId: order.id,
+      },
+      include: {
+        product: true,
+      },
+    });
+    await generateInvoicePDF(invoiceOrder, invoiceOrderProducts);
+    await sendInvoiceMail(invoiceOrder);
     return res.send(order);
   });
 };
